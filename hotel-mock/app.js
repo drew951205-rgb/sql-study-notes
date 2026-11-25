@@ -1,24 +1,29 @@
 "use strict";
 const $ = id => document.getElementById(id);
-const originalExam = new URLSearchParams(location.search).get("exam") === "sql";
+const exam = new URLSearchParams(location.search).get("exam");
+const originalExam = exam === "sql";
+const fullExam = exam === "c";
 const sqlNotes = [
   "先用 Booking 連到顧客和房間，再保留女性且房價大於 200 的訂房紀錄，最後按房價由高到低排。",
   "每間飯店先用全部房間算出最高價。外層再檢查該價格的房間是否有日本或台灣顧客預訂，並依房價升冪排列。",
   "EXISTS 會檢查每間飯店是否至少有一筆台灣顧客的訂房。符合的飯店各列一次。這題沒有 ORDER BY，列的先後都可以。",
   "從 C035 直接推薦的顧客算第 1 層，往下一層就加 1。LEFT JOIN 保留沒有訂房的顧客，COUNT(b.book_id) 會算出 0。先按層級、再按顧客編號排列。"
 ];
-const tables = originalExam ? paper.tables : algebraExam.tables;
+const tables = originalExam ? paper.tables : fullExam ? mixedExam.tables : algebraExam.tables;
 const questions = originalExam
   ? answerKey.map((answer, i) => ({
       ...answer,
       expression: paper.queries[i],
       note: sqlNotes[i],
+      format: "sql",
       points: [12, 12, 10, 16][i],
       ordered: i !== 2
     }))
-  : algebraExam.questions.map(question => ({...question, points: 25, ordered: false}));
+  : fullExam ? mixedExam.questions
+  : algebraExam.questions.map(question => ({...question, format: "algebra", points: 25, ordered: false}));
 const totalPoints = questions.reduce((total, question) => total + question.points, 0);
-const storageKey = originalExam ? "hotel-mock-first-four-v1" : "relational-algebra-mock-b-v1";
+const storageKey = originalExam ? "hotel-mock-first-four-v1"
+  : fullExam ? "database-mock-c-v1" : "relational-algebra-mock-b-v1";
 const blank = i => questions[i].cols.map(() => "");
 const fresh = () => ({
   q: 0,
@@ -65,15 +70,17 @@ function reference(){
 }
 function showExpression(i){
   const expression=questions[i].expression, node=$("prompt");
+  const isSql = questions[i].format === "sql";
+  $("promptLabel").textContent = isSql ? "SQL 題目" : "關聯代數題目";
   node.replaceChildren();
-  const tokens = originalExam
-    ? /'[^']*'|\b(?:SELECT|FROM|AS|JOIN|ON|WHERE|AND|ORDER|BY|DESC|ASC|MAX|IN|EXISTS|WITH|RECURSIVE|UNION|ALL|LEFT|COUNT|GROUP)\b/g
+  const tokens = isSql
+    ? /'[^']*'|\b(?:SELECT|FROM|AS|JOIN|ON|WHERE|AND|OR|NOT|ORDER|BY|DESC|ASC|MAX|IN|EXISTS|WITH|RECURSIVE|UNION|ALL|LEFT|COUNT|GROUP)\b/g
     : /_\{([^}]+)\}/g;
   let pos = 0;
   for(const match of expression.matchAll(tokens)){
     node.append(expression.slice(pos, match.index));
-    const token = originalExam ? el("span", match[0]) : el("sub", match[1]);
-    if(originalExam) token.className = match[0][0] === "'" ? "str" : "kw";
+    const token = isSql ? el("span", match[0]) : el("sub", match[1]);
+    if(isSql) token.className = match[0][0] === "'" ? "str" : "kw";
     node.append(token);
     pos = match.index + match[0].length;
   }
@@ -119,7 +126,7 @@ function render(){
     const score=questions.reduce((total,item,k)=>total+(correct(k)?item.points:0),0);
     $("resultTitle").textContent="總成績　"+score+" / "+totalPoints+" 分";$("rule").textContent="切換題號可查看各題的答案、查詢結果與解析。";$("submit").textContent="重新作答";
   }else{
-    $("resultTitle").textContent="整份交卷";$("rule").textContent="四題一起批改，每題完整答對才給分。";$("submit").textContent="交卷批改";
+    $("resultTitle").textContent="整份交卷";$("rule").textContent="全卷一起批改，每題完整答對才給分。";$("submit").textContent="交卷批改";
   }
 }
 $("add").onclick=()=>{state.answers[state.q].push(blank(state.q));save();drawGrid();$("grid").querySelector("tbody tr:last-child input")?.focus();};
@@ -132,7 +139,7 @@ $("submit").onclick=()=>{
   }else{
     const missing=questions.findIndex((_,i)=>!started(i));
     if(missing>=0){selectQuestion(missing);$("message").textContent="第 "+(missing+1)+" 題尚未作答。請填入資料，或勾選空結果。";$("grid").querySelector("input")?.focus();return;}
-    if(!confirm("確定交卷？四題將一起批改並顯示參考結果。"))return;
+    if(!confirm("確定交卷？全卷將一起批改並顯示參考結果。"))return;
     state.submitted=true;$("message").textContent="";
   }
   save();render();(state.submitted?$("resultTitle"):$("title")).scrollIntoView({block:"center"});
@@ -141,10 +148,17 @@ if(originalExam){
   document.title="資料庫期中模擬卷｜前四題答卷";
   $("examName").textContent="期中模擬卷・前四題";
   $("instructions").textContent="閱讀原卷 SQL，查閱資料表，逐列填入查詢結果。";
-  $("promptLabel").textContent="SQL 題目";
   $("otherExam").textContent="切換到關聯代數 B 卷";
   $("otherExam").href="index.html";
   $("sqlRelations").hidden=false;
+}
+if(fullExam){
+  document.title="資料庫模擬考｜C 卷";
+  $("examName").textContent="資料庫模擬考・C 卷";
+  $("instructions").textContent="第 1～4 題讀 SQL，第 5～8 題讀關聯代數。逐列填入查詢結果，有 ORDER BY 的題目依指定順序填寫。";
+  $("otherExam").textContent="切換到關聯代數 B 卷";
+  $("otherExam").href="index.html";
+  $("questions").classList.add("full-exam");
 }
 $("totalPoints").textContent="共 "+totalPoints+" 分";
 $("progress").max=questions.length;

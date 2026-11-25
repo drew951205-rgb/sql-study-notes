@@ -6,6 +6,11 @@
 #tables {margin-top:.65rem}
 .code sub {font-size:.86em;color:#d9e8eb}
 #promptLabel {font-family:inherit}
+.full-exam {display:grid;grid-template-columns:repeat(8,minmax(0,1fr))}
+.full-exam button {padding-inline:.2rem}
 @media (max-width:900px) {
   .table-jump {display:inline-block;margin-top:.65rem}
+}
+@media (max-width:540px) {
+  .full-exam {grid-template-columns:repeat(4,minmax(0,1fr))}
 }
