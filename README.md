@@ -5,6 +5,7 @@
 ## 先讀講義，再做模擬卷
 
 1. **複習第 7-1 節。** 每個小節都有查詢範例與結果，可以逐步對照 `JOIN`、子查詢、分組統計和遞迴查詢如何影響輸出。[閱讀 7-1 講義](https://drew951205-rgb.github.io/sql-study-notes/handbook/index.html)
-2. **挑戰模擬卷前四題。** 閱讀題目給的 SQL，對照五張資料表，在答案格逐列填入查詢結果。遇到 `ORDER BY` 時，記得依指定順序填寫。[開始作答](https://drew951205-rgb.github.io/sql-study-notes/hotel-mock/index.html)
+2. **挑戰模擬卷前四題。** 閱讀題目給的 SQL，對照五張資料表，在答案格逐列填入查詢結果。遇到 `ORDER BY` 時，記得依指定順序填寫。四題依序為 12、12、10、16 分，共 50 分。[進入原卷答卷](https://drew951205-rgb.github.io/sql-study-notes/hotel-mock/index.html?exam=sql)
+3. **挑戰關聯代數 B 卷。** 用三張圖書館資料表推算四題的 `RESULT`。每題 25 分，答案列順序不限。[開始 B 卷](https://drew951205-rgb.github.io/sql-study-notes/hotel-mock/index.html)
 
-四題共 **50 分**，依序為 12、12、10、16 分，每題完整答對才得分。草稿會自動儲存在目前的瀏覽器。四題填完後按「交卷批改」，即可查看成績、參考結果和逐題解析。
+每題完整答對才得分。兩份答卷的草稿各自儲存在目前的瀏覽器。四題填完後按「交卷批改」，即可查看成績、參考結果和逐題解析。

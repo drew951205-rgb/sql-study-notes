@@ -1,19 +1,21 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>資料庫期中模擬卷｜前四題答卷</title><link rel="stylesheet" href="style.css">
-<script src="paper.js" defer></script><script src="key.js" defer></script><script src="app.js" defer></script></head>
+<title>資料庫模擬考｜關聯代數 B 卷</title><link rel="stylesheet" href="style.css?v=2">
+<script src="paper.js" defer></script><script src="key.js" defer></script><script src="algebra.js" defer></script><script src="app.js?v=2" defer></script></head>
 <body><header><div class="mast"><span class="mark" aria-hidden="true">▤</span><a href="../index.html" style="color:inherit;font-weight:700">SQL學習檔</a><span class="sep">/</span><span>段考練習</span></div><span id="saveStatus" role="status"></span></header>
-<main><div class="intro"><div><h1>期中模擬卷<span>・前四題</span></h1><p>閱讀原卷 SQL，查閱資料表，逐列填入查詢結果。</p></div><div class="progress"><b id="count"></b><span>共 50 分</span><progress id="progress" max="4" value="0"></progress></div></div>
+<main><div class="intro"><div><h1 id="examName">關聯代數 B 卷</h1><p id="instructions">讀題後逐列填入 RESULT。資料列順序不限。</p><a id="otherExam" class="exam-link" href="?exam=sql">切換到原卷前四題</a></div><div class="progress"><b id="count"></b><span id="totalPoints">共 100 分</span><progress id="progress" max="4" value="0"></progress></div></div>
 <div class="layout"><section class="exam"><nav id="questions" aria-label="選擇題號"></nav><article>
-<div class="qhead"><h2 id="title"></h2><span id="points"></span></div>
-<div class="code"><div class="bar">SQL 題目</div><pre tabindex="0"><code id="sql"></code></pre></div>
+<div class="qhead"><h2 id="title" tabindex="-1"></h2><span id="points"></span></div>
+<div class="code"><div class="bar" id="promptLabel">關聯代數題目</div><pre tabindex="0"><code id="prompt"></code></pre></div>
+<a class="table-jump" href="#data-tables">查看資料表</a>
 <div class="answerhead"><h3>我的答案</h3><button id="add">＋ 新增一列</button></div>
 <p class="small" id="guide">每格填一個值，依查詢需要新增列。整列留白會略過。</p><div class="scroll" id="grid"></div>
 <label id="emptyLabel"><input id="empty" type="checkbox">我的答案是空結果（0 列）</label>
 <section id="feedback" hidden></section>
 <footer><button id="prev">上一題</button><button id="next" class="primary">下一題</button></footer>
 </article></section>
-<aside><h2>原卷資料表</h2><p class="small">選擇表名，對照題目中的欄位與資料。</p><div id="tables" aria-label="選擇資料表"></div><div class="refhead"><strong id="tableName"></strong><span id="numRows"></span></div><div class="tablebox" id="reference" tabindex="0"></div>
-<details><summary>查看資料表關聯</summary><div id="relations">Booking.cust_id → Customer.cust_id<br>Booking.room_id → Room.room_id<br>Room.hotel_id → Hotel.hotel_id</div></details></aside></div>
-<section class="submitbox"><div><h2 id="resultTitle">整份交卷</h2><p class="small" id="rule">四題一起批改。練習計分採整題答對給分，依原卷配分。</p></div><button class="primary" id="submit">交卷批改</button></section><p id="message" role="status"></p>
+<aside id="data-tables" tabindex="-1"><h2>資料表</h2><div id="tables" aria-label="選擇資料表"></div><div class="refhead"><strong id="tableName"></strong><span id="numRows"></span></div><div class="tablebox" id="reference" tabindex="0"></div>
+<a class="table-jump" href="#title">返回題目</a>
+<details id="sqlRelations" hidden><summary>查看資料表關聯</summary><div id="relations">Booking.cust_id → Customer.cust_id<br>Booking.room_id → Room.room_id<br>Room.hotel_id → Hotel.hotel_id</div></details></aside></div>
+<section class="submitbox"><div><h2 id="resultTitle">整份交卷</h2><p class="small" id="rule">四題一起批改，每題完整答對才給分。</p></div><button class="primary" id="submit">交卷批改</button></section><p id="message" role="status"></p>
 </main></body></html>
