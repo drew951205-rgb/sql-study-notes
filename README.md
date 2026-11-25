@@ -9,5 +9,6 @@
 3. **挑戰關聯代數 B 卷。** 用三張圖書館資料表推算四題的 `RESULT`。每題 25 分，答案列順序不限。[開始 B 卷](https://drew951205-rgb.github.io/sql-study-notes/hotel-mock/index.html)
 
 4. **挑戰完整模擬考 C 卷。** 四題 SQL、四題關聯代數，使用同一組器材租借資料表，共 100 分。[開始 C 卷](https://drew951205-rgb.github.io/sql-study-notes/hotel-mock/index.html?exam=c)
+5. **挑戰完整模擬考 D 卷。** 沿用原卷的飯店資料表，另出四題 SQL 和四題關聯代數，共 100 分。[開始 D 卷](https://drew951205-rgb.github.io/sql-study-notes/hotel-mock/index.html?exam=d)
 
 每題完整答對才得分。各卷的草稿各自儲存在目前的瀏覽器。全卷填完後按「交卷批改」，即可查看成績、參考結果和逐題解析。

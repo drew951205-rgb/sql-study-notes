@@ -2,14 +2,16 @@
 const $ = id => document.getElementById(id);
 const exam = new URLSearchParams(location.search).get("exam");
 const originalExam = exam === "sql";
-const fullExam = exam === "c";
+const fullExam = exam === "c" ? {label: "C", tables: mixedExam.tables, questions: mixedExam.questions}
+  : exam === "d" ? {label: "D", tables: paper.tables, questions: hotelVariantQuestions}
+  : null;
 const sqlNotes = [
   "先用 Booking 連到顧客和房間，再保留女性且房價大於 200 的訂房紀錄，最後按房價由高到低排。",
   "每間飯店先用全部房間算出最高價。外層再檢查該價格的房間是否有日本或台灣顧客預訂，並依房價升冪排列。",
   "EXISTS 會檢查每間飯店是否至少有一筆台灣顧客的訂房。符合的飯店各列一次。這題沒有 ORDER BY，列的先後都可以。",
   "從 C035 直接推薦的顧客算第 1 層，往下一層就加 1。LEFT JOIN 保留沒有訂房的顧客，COUNT(b.book_id) 會算出 0。先按層級、再按顧客編號排列。"
 ];
-const tables = originalExam ? paper.tables : fullExam ? mixedExam.tables : algebraExam.tables;
+const tables = originalExam ? paper.tables : fullExam?.tables ?? algebraExam.tables;
 const questions = originalExam
   ? answerKey.map((answer, i) => ({
       ...answer,
@@ -19,11 +21,11 @@ const questions = originalExam
       points: [12, 12, 10, 16][i],
       ordered: i !== 2
     }))
-  : fullExam ? mixedExam.questions
-  : algebraExam.questions.map(question => ({...question, format: "algebra", points: 25, ordered: false}));
+  : fullExam?.questions
+    ?? algebraExam.questions.map(question => ({...question, format: "algebra", points: 25, ordered: false}));
 const totalPoints = questions.reduce((total, question) => total + question.points, 0);
 const storageKey = originalExam ? "hotel-mock-first-four-v1"
-  : fullExam ? "database-mock-c-v1" : "relational-algebra-mock-b-v1";
+  : fullExam ? "database-mock-"+exam+"-v1" : "relational-algebra-mock-b-v1";
 const blank = i => questions[i].cols.map(() => "");
 const fresh = () => ({
   q: 0,
@@ -74,7 +76,7 @@ function showExpression(i){
   $("promptLabel").textContent = isSql ? "SQL 題目" : "關聯代數題目";
   node.replaceChildren();
   const tokens = isSql
-    ? /'[^']*'|\b(?:SELECT|FROM|AS|JOIN|ON|WHERE|AND|OR|NOT|ORDER|BY|DESC|ASC|MAX|IN|EXISTS|WITH|RECURSIVE|UNION|ALL|LEFT|COUNT|GROUP)\b/g
+    ? /'[^']*'|\b(?:SELECT|FROM|AS|JOIN|ON|WHERE|AND|OR|NOT|ORDER|BY|DESC|ASC|MAX|AVG|IN|EXISTS|WITH|RECURSIVE|UNION|ALL|LEFT|COUNT|GROUP)\b/g
     : /_\{([^}]+)\}/g;
   let pos = 0;
   for(const match of expression.matchAll(tokens)){
@@ -153,8 +155,8 @@ if(originalExam){
   $("sqlRelations").hidden=false;
 }
 if(fullExam){
-  document.title="資料庫模擬考｜C 卷";
-  $("examName").textContent="資料庫模擬考・C 卷";
+  document.title="資料庫模擬考｜"+fullExam.label+" 卷";
+  $("examName").textContent="資料庫模擬考・"+fullExam.label+" 卷";
   $("instructions").textContent="第 1～4 題讀 SQL，第 5～8 題讀關聯代數。逐列填入查詢結果，有 ORDER BY 的題目依指定順序填寫。";
   $("otherExam").textContent="切換到關聯代數 B 卷";
   $("otherExam").href="index.html";
