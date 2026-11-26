@@ -4,6 +4,7 @@ const exam = new URLSearchParams(location.search).get("exam");
 const originalExam = exam === "sql";
 const fullExam = exam === "c" ? {label: "C", tables: mixedExam.tables, questions: mixedExam.questions}
   : exam === "d" ? {label: "D", tables: paper.tables, questions: hotelVariantQuestions}
+  : exam === "e" ? {label: "E", tables: paper.tables, questions: hotelShortQuestions}
   : null;
 const sqlNotes = [
   "先用 Booking 連到顧客和房間，再保留女性且房價大於 200 的訂房紀錄，最後按房價由高到低排。",
@@ -157,10 +158,11 @@ if(originalExam){
 if(fullExam){
   document.title="資料庫模擬考｜"+fullExam.label+" 卷";
   $("examName").textContent="資料庫模擬考・"+fullExam.label+" 卷";
-  $("instructions").textContent="第 1～4 題讀 SQL，第 5～8 題讀關聯代數。逐列填入查詢結果，有 ORDER BY 的題目依指定順序填寫。";
+  const sqlCount = questions.filter(question => question.format === "sql").length;
+  $("instructions").textContent="前 "+sqlCount+" 題讀 SQL，後 "+(questions.length-sqlCount)+" 題讀關聯代數。逐列填入查詢結果，有 ORDER BY 的題目依指定順序填寫。";
   $("otherExam").textContent="切換到關聯代數 B 卷";
   $("otherExam").href="index.html";
-  $("questions").classList.add("full-exam");
+  if(questions.length > 4) $("questions").classList.add("full-exam");
 }
 $("totalPoints").textContent="共 "+totalPoints+" 分";
 $("progress").max=questions.length;
